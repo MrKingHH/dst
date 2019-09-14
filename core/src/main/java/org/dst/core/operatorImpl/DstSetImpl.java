@@ -1,7 +1,8 @@
 package org.dst.core.operatorImpl;
 
-import org.dst.core.exception.KeyNotFoundException;
 import org.dst.core.operatorset.DstSet;
+import org.dst.exception.KeyNotFoundException;
+import org.dst.utils.Status;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -20,23 +21,37 @@ public class DstSetImpl implements DstSet {
 
   @Override
   public Set<String> get(String key) {
+    if (!setMap.containsKey(key)) {
+      throw new KeyNotFoundException(key);
+    }
+
     return setMap.get(key);
   }
 
   @Override
-  public boolean del(String key) {
+  public Status dropByKey(String key) {
     if (!setMap.containsKey(key)) {
-      return false;
+      return Status.KEY_NOT_FOUND;
     }
 
     setMap.remove(key);
-    return true;
+    return Status.OK;
+  }
+
+  @Override
+  public Status del(String key, String value) {
+    if (!setMap.containsKey(key)) {
+      return Status.KEY_NOT_FOUND;
+    }
+
+    setMap.get(key).remove(value);
+    return Status.OK;
   }
 
   @Override
   public boolean exists(String key, String value) throws KeyNotFoundException {
     if (!setMap.containsKey(key)) {
-      throw new KeyNotFoundException("The key is not found");
+      throw new KeyNotFoundException(key);
     }
 
     return setMap.get(key).contains(value);
