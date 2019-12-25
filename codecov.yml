@@ -11,6 +11,10 @@ coverage:
     changes: no
   precision: 2
   range: "50...100"
+flags:
+  unittest:
+    paths:
+      - test/.*
 ignore:
  - "rpc/src/main/java/com/distkv/dst/rpc/protobuf/generated"
  - "test/.*"
